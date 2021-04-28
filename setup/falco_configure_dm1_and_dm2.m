@@ -57,28 +57,7 @@ end
 
 if(isfield(mp.dm1,'V')==false); mp.dm1.V = zeros(mp.dm1.Nact,mp.dm1.Nact); end %--Initial DM voltages
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% quadratic_gain branch
-%-- NEW CODE: Use a quadratic or linear gains
-mp.dm1.fitType = 'linear';
-%mp.dm1.fitType = 'quadratic';
 
-if strcmp(mp.dm1.fitType,'quadratic')
-    
-    try
-        mp.dm1.p1 = fitsread(); % Reads in the fits file for p1,p2, and p3 the coefficients of the quadratic equation.
-        mp.dm1.p2 = fitsread(); % These coefficients are determined experimentally
-        mp.dm1.p3 = fitsread();
-    catch
-        disp('p1 p2 and p3 are not correctly initialized for dm1!'); beep; pause(1); beep;
-        disp('Using a matrix of ones instead')
-        mp.dm1.p1 = ones(size(mp.dm1.V));
-        mp.dm1.p2 = ones(size(mp.dm1.V));
-        mp.dm1.p3 = ones(size(mp.dm1.V));
-    end
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %% DM2
@@ -120,28 +99,7 @@ end
 
 if(isfield(mp.dm2,'V')==false); mp.dm2.V = zeros(mp.dm2.Nact,mp.dm2.Nact); end %--Initial DM voltages
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% quadratic_gain branch
-%-- NEW CODE: Use a quadratic or linear gains
-mp.dm2.fitType = 'linear';
-%mp.dm2.fitType = 'quadratic';
 
-if strcmp(mp.dm2.fitType,'quadratic')
-    
-    try
-        mp.dm2.p1 = fitsread(); % Reads in the fits file for p1,p2, and p3 the coefficients of the quadratic equation.
-        mp.dm2.p2 = fitsread(); % These coefficients are determined experimentally
-        mp.dm2.p3 = fitsread();
-    catch
-        disp('p1 p2 and p3 are not correctly initialized for dm2!'); beep; pause(1); beep;
-        disp('Using a matrix of ones instead')
-        mp.dm2.p1 = ones(size(mp.dm2.V));
-        mp.dm2.p2 = ones(size(mp.dm2.V));
-        mp.dm2.p3 = ones(size(mp.dm2.V));
-    end
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
 %--Re-include all actuators in the basis set. Need act_ele to be a column vector.
