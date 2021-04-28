@@ -183,18 +183,25 @@ switch lower(mp.layout)
         if(any(mp.dm_ind==1))
             optval.use_dm1 = true;
             
+            % OLD CODE: I commented out the old code which assumes only a linear 
+            % gain is possible
+            % optval.dm1 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
             
-            optval.dm1 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
-        
-         
-        
+            % NEW CODE: Inserted function falco_calc_act_height_from_voltage here
+            optval.dm1 = falco_full_model_calc_act_height_from_voltage(mp.dm1, mp.full.dm1.flatmap);
+            
         end
         if(any(mp.dm_ind==2))
             optval.use_dm2 = true;
             
-            % mp.dm2.V = dm_adderrors(mp.dm2);
+            % OLD CODE: I commented out the old code which assumes only a linear 
+            % gain is possible
+            % optval.dm2 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
             
-            optval.dm2 = mp.dm2.V.*mp.dm2.VtoH + mp.full.dm2.flatmap; %--DM2 commands in meters
+            % NEW CODE: Inserted function falco_calc_act_height_from_voltage here
+            optval.dm2 = falco_full_model_calc_act_height_from_voltage(mp.dm2, mp.full.dm2.flatmap);
+            
+
         end
         
         if(normFac==0)
