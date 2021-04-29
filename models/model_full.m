@@ -183,6 +183,10 @@ switch lower(mp.layout)
         if(any(mp.dm_ind==1))
             optval.use_dm1 = true;
             
+            %%% NEW CODE For Simulating Pinned, Railed, and Stuck
+            % actuators in the full model
+            mp.dm1 = falco_enforce_dm_constraints(mp.dm1);
+            %%% 
             
             optval.dm1 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
         
@@ -192,7 +196,11 @@ switch lower(mp.layout)
         if(any(mp.dm_ind==2))
             optval.use_dm2 = true;
             
-            % mp.dm2.V = dm_adderrors(mp.dm2);
+            %%% NEW CODE For Simulating Pinned, Railed, and Stuck
+            % actuators in the full model
+            mp.dm2 = falco_enforce_dm_constraints(mp.dm2);
+            %%% 
+            
             
             optval.dm2 = mp.dm2.V.*mp.dm2.VtoH + mp.full.dm2.flatmap; %--DM2 commands in meters
         end
