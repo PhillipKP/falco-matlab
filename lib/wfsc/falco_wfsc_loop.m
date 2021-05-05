@@ -240,8 +240,8 @@ function out = store_intensities(mp, out, ev, Itr)
     % Modulated
     Iest2D = zeros(mp.Fend.Neta, mp.Fend.Nxi);
     Iest2D(mp.Fend.corr.maskBool) = IestAllBands(:);
-    out.IestScoreHist(Itr) = mean(Iest2D(mp.Fend.score.maskBool));
-    out.IestCorrHist(Itr) = mean(Iest2D(mp.Fend.corr.maskBool));
+    out.IestScoreHist(Itr) = mean(Iest2D(mp.Fend.score.maskBool)); % From the falco_est_perfect_Efield_with_Zernikes
+    out.IestCorrHist(Itr) = mean(Iest2D(mp.Fend.corr.maskBool));   % From the falco_est_perfect_Efield_with_Zernikes
     % Unmodulated
     Iinco2D = zeros(mp.Fend.Neta, mp.Fend.Nxi);
     Iinco2D(mp.Fend.corr.maskBool) = IincoAllBands(:);
