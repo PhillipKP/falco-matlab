@@ -31,8 +31,8 @@ while icav < size(varargin, 2)
     icav = icav + 1;
     switch lower(varargin{icav})
         case{'getnorm'} % Set to 0 when finding the normalization factor
-            normFac = 0; 
-        case {'normoff', 'unnorm', 'nonorm'} 
+            normFac = 0;
+        case {'normoff', 'unnorm', 'nonorm'}
             normFac = 1;
         otherwise
             error('model_full: Unknown keyword: %s\n', varargin{icav});
@@ -65,12 +65,12 @@ etaOffset = mp.star.etaOffsetVec(iStar);
 starWeight = mp.star.weights(iStar);
 TTphase = (-1)*(2*pi*(xiOffset*mp.P2.full.XsDL + etaOffset*mp.P2.full.YsDL));
 Ett = exp(1i*TTphase*mp.lambda0/lambda);
-Ein = sqrt(starWeight) * Ett .* mp.P1.full.E(:, :, modvar.wpsbpIndex, modvar.sbpIndex); 
+Ein = sqrt(starWeight) * Ett .* mp.P1.full.E(:, :, modvar.wpsbpIndex, modvar.sbpIndex);
 
-if strcmpi(modvar.whichSource, 'offaxis') %--Use for throughput calculations 
+if strcmpi(modvar.whichSource, 'offaxis') %--Use for throughput calculations
     TTphase = (-1)*(2*pi*(modvar.x_offset*mp.P2.full.XsDL + modvar.y_offset*mp.P2.full.YsDL));
     Ett = exp(1i*TTphase*mp.lambda0/lambda);
-    Ein = Ett .* Ein; 
+    Ein = Ett .* Ein;
 end
 
 %--Shift the source off-axis to compute the intensity normalization value.
@@ -80,7 +80,7 @@ if normFac == 0
     source_y_offset = mp.source_y_offset_norm; %--source offset in lambda0/D for normalization
     TTphase = (-1)*(2*pi*(source_x_offset*mp.P2.full.XsDL + source_y_offset*mp.P2.full.YsDL));
     Ett = exp(1i*TTphase*mp.lambda0/lambda);
-    Ein = Ett.*mp.P1.full.E(:, :, modvar.sbpIndex); 
+    Ein = Ett.*mp.P1.full.E(:, :, modvar.sbpIndex);
 end
 
 %--Apply a Zernike (in amplitude) at input pupil if specified
@@ -98,8 +98,8 @@ end
 %% Pre-compute the FPM first for HLC as mp.FPM.mask
 switch lower(mp.layout)
     case{'fourier'}
-        
-        switch upper(mp.coro) 
+
+        switch upper(mp.coro)
             case{'EHLC'} %--DMs, optional apodizer, extended FPM with metal and dielectric modulation and outer stop, and LS. Uses 1-part direct MFTs to/from FPM
                 %--Complex transmission map of the FPM.
                 ilam = (modvar.sbpIndex-1)*mp.Nwpsbp + modvar.wpsbpIndex;
@@ -118,15 +118,15 @@ switch lower(mp.layout)
                     mp.FPM.mask = falco_gen_HLC_FPM_complex_trans_mat(mp, modvar.sbpIndex, modvar.wpsbpIndex, 'full');
                 end
         end
-        
+
     case{'fpm_scale'} %--FPM scales with wavelength
-        switch upper(mp.coro)     
+        switch upper(mp.coro)
             case{'HLC'}
                 if(mp.Nsbp>1 && mp.Nwpsbp>1)
                     %--Weird indexing is because interior wavelengths at
                     %edges of sub-bands are the same, and the FPMcube
                     %contains only the minimal set of masks.
-                    ilam = (modvar.sbpIndex-2)*mp.Nwpsbp + modvar.wpsbpIndex + (mp.Nsbp-modvar.sbpIndex+1);  
+                    ilam = (modvar.sbpIndex-2)*mp.Nwpsbp + modvar.wpsbpIndex + (mp.Nsbp-modvar.sbpIndex+1);
                 elseif(mp.Nsbp==1 && mp.Nwpsbp>1)
                     ilam = modvar.wpsbpIndex;
                 elseif(mp.Nwpsbp==1)
@@ -137,13 +137,13 @@ switch lower(mp.layout)
         end
 end
 
-% %% Apply DM constraints now. Can't do within DM surface generator if calling a PROPER model. 
+% %% Apply DM constraints now. Can't do within DM surface generator if calling a PROPER model.
 % if(any(mp.dm_ind==1));  mp.dm1 = falco_enforce_dm_constraints(mp.dm1);  end
 % if(any(mp.dm_ind==2));  mp.dm2 = falco_enforce_dm_constraints(mp.dm2);  end
 
 %% Select which optical layout's full model to use.
 switch lower(mp.layout)
-    
+
     case{'fourier', 'fpm_scale'}
         if ~mp.flagFiber
             Eout = model_full_Fourier(mp, lambda, Ein, normFac);
@@ -151,27 +151,27 @@ switch lower(mp.layout)
             [Eout, Efiber] = model_full_Fourier(mp, lambda, Ein, normFac);
             varargout{1} = Efiber;
         end
-        
+
     case{'proper'}
         optval = mp.full;
-        
+
         if any(mp.dm_ind == 1)
             optval.use_dm1 = true;
-            
-            
+
+
             optval.dm1 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
-        
-         
-        
+
+
+
         end
         if any(mp.dm_ind == 2)
             optval.use_dm2 = true;
-            
+
             % mp.dm2.V = dm_adderrors(mp.dm2);
-            
+
             optval.dm2 = mp.dm2.V.*mp.dm2.VtoH + mp.full.dm2.flatmap; %--DM2 commands in meters
         end
-        
+
         if(normFac==0)
             optval.xoffset = -mp.source_x_offset_norm;
             optval.yoffset = -mp.source_y_offset_norm;
@@ -180,12 +180,14 @@ switch lower(mp.layout)
                     optval.use_fpm = false;
             end
         end
-        
+
         Eout = prop_run(mp.full.prescription, lambda*1e6, mp.full.gridsize, 'quiet', 'passvalue', optval); %--wavelength needs to be in microns instead of meters for PROPER
-        
-        if normFac ~= 0
-            Eout = Eout/sqrt(normFac);
+
+        if(normFac~=0)
+            Eout = Eout/sqrt(normFac); %If the normalization factor is not zero
         end
+
+
 
     case{'wfirst_phaseb_proper', 'roman_phasec_proper'} %--Use the true full model in PROPER as the full model
         optval = mp.full;
@@ -197,14 +199,14 @@ switch lower(mp.layout)
             optval.source_x_offset = -mp.source_x_offset_norm;
             optval.source_y_offset = -mp.source_y_offset_norm;
         end
-        
+
         switch lower(mp.layout)
             case 'wfirst_phaseb_proper'
                 Eout = prop_run('model_full_wfirst_phaseb', lambda*1e6, mp.Fend.Nxi, 'quiet', 'passvalue', optval ); %--wavelength needs to be in microns instead of meters for PROPER
             case 'roman_phasec_proper'
                 Eout = prop_run('roman_phasec_efc_jpl', lambda*1e6, mp.Fend.Nxi, 'quiet', 'passvalue', optval ); %--wavelength needs to be in microns instead of meters for PROPER
         end
-        
+
         if normFac ~= 0
             Eout = Eout/sqrt(normFac);
         end
