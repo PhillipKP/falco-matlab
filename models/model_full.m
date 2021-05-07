@@ -208,7 +208,7 @@ switch lower(mp.layout)
         
         Eout = prop_run(mp.full.prescription, lambda*1e6, mp.full.gridsize, 'quiet', 'passvalue', optval); %--wavelength needs to be in microns instead of meters for PROPER
         if(normFac~=0)
-            Eout = Eout/sqrt(normFac);
+            Eout = Eout/sqrt(normFac); %If the normalization factor is not zero
         end
         
         
