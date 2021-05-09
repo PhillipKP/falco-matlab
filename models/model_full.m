@@ -20,6 +20,9 @@
 
 function [Eout, varargout] = model_full(mp, modvar, varargin)
 
+
+
+
 % Set default values of input parameters
 if(isfield(modvar, 'sbpIndex'))
     normFac = mp.Fend.full.I00(modvar.sbpIndex, modvar.wpsbpIndex); %--Value to normalize the PSF. Set to 0 when finding the normalization factor
@@ -38,6 +41,9 @@ while icav < size(varargin, 2)
             error('model_full: Unknown keyword: %s\n', varargin{icav});
     end
 end
+
+
+
 
 %--Save a lot of RAM (remove compact model data from full model inputs)
 if(any(mp.dm_ind==1)); mp.dm1 = rmfield(mp.dm1, 'compact'); end
@@ -94,6 +100,20 @@ if modvar.zernIndex ~= 1
     zernMat = padOrCropEven(zernMat, mp.P1.full.Narr);
     Ein = Ein.*zernMat*(2*pi/lambda)*mp.jac.Zcoef(modvar.zernIndex);
 end
+%%% FOR DEBUGGING
+
+modvar
+
+normFac
+
+
+disp(['mp.layout = ' mp.layout ''])
+
+dbstack
+
+%%%
+
+
 
 %% Pre-compute the FPM first for HLC as mp.FPM.mask
 switch lower(mp.layout)
