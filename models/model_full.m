@@ -181,16 +181,33 @@ switch lower(mp.layout)
         optval = mp.full;
         
         if(any(mp.dm_ind==1))
+            
+            
             optval.use_dm1 = true;
+            
+            % NEW CODE: Convert flat map to voltages
+            dm1_fm_V = mp.full.dm1.flatmap ./ mp.dm1.VtoH;
+ 
+            % NEW CODE: Store for later use
+            original_dm1_V = mp.dm1.V;
+            
+            % NEW CODE: Add flat map in voltage units instead of surface
+            % units
+            mp.dm1.V = mp.dm1.V + dm1_fm_V;
             
             %%% NEW CODE For Simulating Pinned, Railed, and Stuck
             % actuators in the full model
             mp.dm1 = falco_enforce_dm_constraints(mp.dm1);
-            %%% 
             
-            optval.dm1 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
+            %%% NEW CODE For Simulating Weak actuators in the full model
+            mp.dm1 = falco_enforce_weak_actuators(mp.dm1);
+  
+            %%% MODIFIED CODE: Flat map is baked into mp.dm1.V now
+            optval.dm1 = mp.dm1.V.*mp.dm1.VtoH; %--DM1 commands in meters
         
-         
+            % DO I NEED TO RESTORE mp.dm1.V to it's original value after
+            % this??? 
+            mp.dm1.V = original_dm1_V;
         
         end
         if(any(mp.dm_ind==2))
