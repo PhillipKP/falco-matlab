@@ -31,8 +31,8 @@ while icav < size(varargin, 2)
     icav = icav + 1;
     switch lower(varargin{icav})
         case{'getnorm'} % Set to 0 when finding the normalization factor
-            normFac = 0; 
-        case {'normoff', 'unnorm', 'nonorm'} 
+            normFac = 0;
+        case {'normoff', 'unnorm', 'nonorm'}
             normFac = 1;
         otherwise
             error('model_full: Unknown keyword: %s\n', varargin{icav});
@@ -65,12 +65,12 @@ etaOffset = mp.star.etaOffsetVec(iStar);
 starWeight = mp.star.weights(iStar);
 TTphase = (-1)*(2*pi*(xiOffset*mp.P2.full.XsDL + etaOffset*mp.P2.full.YsDL));
 Ett = exp(1i*TTphase*mp.lambda0/lambda);
-Ein = sqrt(starWeight) * Ett .* mp.P1.full.E(:, :, modvar.wpsbpIndex, modvar.sbpIndex); 
+Ein = sqrt(starWeight) * Ett .* mp.P1.full.E(:, :, modvar.wpsbpIndex, modvar.sbpIndex);
 
-if strcmpi(modvar.whichSource, 'offaxis') %--Use for throughput calculations 
+if strcmpi(modvar.whichSource, 'offaxis') %--Use for throughput calculations
     TTphase = (-1)*(2*pi*(modvar.x_offset*mp.P2.full.XsDL + modvar.y_offset*mp.P2.full.YsDL));
     Ett = exp(1i*TTphase*mp.lambda0/lambda);
-    Ein = Ett .* Ein; 
+    Ein = Ett .* Ein;
 end
 
 %--Shift the source off-axis to compute the intensity normalization value.
@@ -80,7 +80,7 @@ if normFac == 0
     source_y_offset = mp.source_y_offset_norm; %--source offset in lambda0/D for normalization
     TTphase = (-1)*(2*pi*(source_x_offset*mp.P2.full.XsDL + source_y_offset*mp.P2.full.YsDL));
     Ett = exp(1i*TTphase*mp.lambda0/lambda);
-    Ein = Ett.*mp.P1.full.E(:, :, modvar.sbpIndex); 
+    Ein = Ett.*mp.P1.full.E(:, :, modvar.sbpIndex);
 end
 
 %--Apply a Zernike (in amplitude) at input pupil if specified
@@ -99,7 +99,7 @@ end
 switch lower(mp.layout)
     case{'fourier'}
         
-        switch upper(mp.coro) 
+        switch upper(mp.coro)
             case{'EHLC'} %--DMs, optional apodizer, extended FPM with metal and dielectric modulation and outer stop, and LS. Uses 1-part direct MFTs to/from FPM
                 %--Complex transmission map of the FPM.
                 ilam = (modvar.sbpIndex-1)*mp.Nwpsbp + modvar.wpsbpIndex;
@@ -108,25 +108,25 @@ switch lower(mp.layout)
                 else
                     mp.FPM.mask = falco_gen_EHLC_FPM_complex_trans_mat(mp, modvar.sbpIndex, modvar.wpsbpIndex, 'full');
                 end
-
+                
             case{'HLC'} %--DMs, optional apodizer, FPM with optional metal and dielectric modulation, and LS. Uses Babinet's principle about FPM.
                 %--Complex transmission map of the FPM.
                 ilam = (modvar.sbpIndex-1)*mp.Nwpsbp + modvar.wpsbpIndex;
                 if(isfield(mp, 'FPMcubeFull')) %--Load it if stored
-                   %mp.FPM.mask = mp.FPMcubeFull(:, :, ilam);
+                    %mp.FPM.mask = mp.FPMcubeFull(:, :, ilam);
                 else %--Otherwise generate it
                     mp.FPM.mask = falco_gen_HLC_FPM_complex_trans_mat(mp, modvar.sbpIndex, modvar.wpsbpIndex, 'full');
                 end
         end
         
     case{'fpm_scale'} %--FPM scales with wavelength
-        switch upper(mp.coro)     
+        switch upper(mp.coro)
             case{'HLC'}
                 if(mp.Nsbp>1 && mp.Nwpsbp>1)
                     %--Weird indexing is because interior wavelengths at
                     %edges of sub-bands are the same, and the FPMcube
                     %contains only the minimal set of masks.
-                    ilam = (modvar.sbpIndex-2)*mp.Nwpsbp + modvar.wpsbpIndex + (mp.Nsbp-modvar.sbpIndex+1);  
+                    ilam = (modvar.sbpIndex-2)*mp.Nwpsbp + modvar.wpsbpIndex + (mp.Nsbp-modvar.sbpIndex+1);
                 elseif(mp.Nsbp==1 && mp.Nwpsbp>1)
                     ilam = modvar.wpsbpIndex;
                 elseif(mp.Nwpsbp==1)
@@ -137,7 +137,7 @@ switch lower(mp.layout)
         end
 end
 
-% %% Apply DM constraints now. Can't do within DM surface generator if calling a PROPER model. 
+% %% Apply DM constraints now. Can't do within DM surface generator if calling a PROPER model.
 % if(any(mp.dm_ind==1));  mp.dm1 = falco_enforce_dm_constraints(mp.dm1);  end
 % if(any(mp.dm_ind==2));  mp.dm2 = falco_enforce_dm_constraints(mp.dm2);  end
 
@@ -157,6 +157,22 @@ switch lower(mp.layout)
         
         if any(mp.dm_ind == 1)
             optval.use_dm1 = true;
+            
+            %--Quantization of DM actuation steps based on least significant bit of the
+            % DAC (digital-analog converter). In height, so called HminStep
+            % If HminStep (minimum step in H) is defined, then quantize the DM voltages
+            if(isfield(mp.dm1,'HminStep') && ~any(isnan(mp.dm1.HminStep(:))))
+                % If desired method is not defined, set it to the default.
+                if(~isfield(mp.dm1,'HminStepMethod'))
+                    mp.dm1.HminStepMethod = 'round';
+                end
+                
+                % Discretize/Quantize the DM voltages (creates dm.Vquantized)
+                mp.dm1 = falco_discretize_dm_surf(mp.dm1, mp.dm1.HminStepMethod);
+                mp.dm1.V = mp.dm1.Vquantized;
+            end
+            
+            
             optval.dm1 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
         end
         if any(mp.dm_ind == 2)
@@ -178,7 +194,7 @@ switch lower(mp.layout)
         if normFac ~= 0
             Eout = Eout/sqrt(normFac);
         end
-
+        
     case{'wfirst_phaseb_proper', 'roman_phasec_proper'} %--Use the true full model in PROPER as the full model
         optval = mp.full;
         optval.use_dm1 = true;
@@ -200,7 +216,7 @@ switch lower(mp.layout)
         if normFac ~= 0
             Eout = Eout/sqrt(normFac);
         end
-
+        
 end
 
 %% Undo GPU variables if they exist
