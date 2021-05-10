@@ -18,7 +18,7 @@
 function subbandImage = falco_get_sbp_image(mp, iSubband)
 
     if mp.flagSim
-        subbandImage = falco_get_sim_sbp_image(mp, iSubband);
+        subbandImage = phil_falco_get_sim_sbp_image(mp, iSubband);
     else
         subbandImage = falco_get_testbed_sbp_image(mp, iSubband);
     end

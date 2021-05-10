@@ -178,7 +178,17 @@ switch lower(mp.layout)
         if any(mp.dm_ind == 1)
             optval.use_dm1 = true;
 
-
+            
+            % Add noise here
+            % Need to fix the noise so it only works on real actuators
+            if isfield(modvar,'dmNoiseIndex')
+                mp.dm1.V = mp.dm1.V + mp.dm1.noise_mat(:,:,modvar.dmNoiseIndex)
+                
+                %DEBUGGING FOR PHIL
+                %save(['VforNoiseIndex' num2str(modvar.dmNoiseIndex) 'lambda' num2str(lambda) '.mat'])
+                
+            end
+            
             optval.dm1 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
 
 
@@ -203,8 +213,11 @@ switch lower(mp.layout)
 
         Eout = prop_run(mp.full.prescription, lambda*1e6, mp.full.gridsize, 'quiet', 'passvalue', optval); %--wavelength needs to be in microns instead of meters for PROPER
 
-        if(normFac~=0)
-            Eout = Eout/sqrt(normFac); %If the normalization factor is not zero
+        
+        if ~isfield(modvar,'dmNoiseIndex') % DO NOT NORMALIZE IF DM VOLTAGE NOISE IS BEING USED
+            if(normFac~=0) % DOESN'T EXECUTE IF normFac = 0
+                Eout = Eout/sqrt(normFac); %If the normalization factor is not zero
+            end
         end
 
 

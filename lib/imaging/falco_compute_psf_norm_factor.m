@@ -75,17 +75,22 @@ if(mp.flagParfor)
     end
     
 else %--No parfor
+    %save('workspace_before_model_full.mat')
+  
     for si=1:mp.Nsbp
         for wi=1:mp.Nwpsbp
             modvar.sbpIndex = si;
             modvar.wpsbpIndex = wi;
+            % for dmi = 1:mp.NdmNoiseItr
             Etemp = model_full(mp, modvar,'getNorm');
             mp.Fend.full.I00(si,wi) = max(max(abs(Etemp).^2));
+            %
         end
     end
+   
 end
 
-%--Visually verify the normalized coronagraphic PSF
+%--Visually nverify the normalized coronagraphic PSF
 if(mp.flagPlot)
     modvar.sbpIndex = mp.si_ref;
     modvar.wpsbpIndex = mp.wi_ref;
