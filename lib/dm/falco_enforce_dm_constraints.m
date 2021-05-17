@@ -8,8 +8,8 @@
 % mirrors. This is for conventional DMs, DMs 1 and 2.
 %
 % Constraints:
-% 1) Min and max bounds
-% 2) Pinned/railed actuators
+% 2) Min and max bounds
+% 1) Pinned/railed actuators
 % 3) Neighbor rule
 % 4) Tied actuators
 %
@@ -23,11 +23,17 @@
 
 function dm = falco_enforce_dm_constraints(dm)
 
+
+% 2) Enforce bounds at pinned actuators
+dm.V(dm.pinned) = dm.Vpinned; 
+
 % 1) Find actuators that exceed min and max values. Any actuators reaching 
 % those limits are added to the pinned actuator list.
+Vtotal = dm.V+dm.biasMap;
+
+
 
 % Min voltage limit
-Vtotal = dm.V+dm.biasMap;
 indVoltageTooLow = find(Vtotal < dm.Vmin);
 dm.pinned = [dm.pinned; indVoltageTooLow]; % augment the column vector of pinned actuators' linear indices
 dm.Vpinned = [dm.Vpinned; (dm.Vmin*ones(size(indVoltageTooLow))-dm.biasMap(indVoltageTooLow))];
@@ -37,8 +43,6 @@ indVoltageTooHigh = find(Vtotal > dm.Vmax);
 dm.pinned = [dm.pinned; indVoltageTooHigh]; % augment the column vector of pinned actuators' linear indices
 dm.Vpinned = [dm.Vpinned; (dm.Vmax*ones(size(indVoltageTooHigh))-dm.biasMap(indVoltageTooHigh))];
 
-% 2) Enforce bounds at pinned actuators
-dm.V(dm.pinned) = dm.Vpinned; 
 
 % 3) Find which actuators violate the DM neighbor rule. (This restricts 
 % the maximum voltage between an actuator and each of its 8 neighbors.) 

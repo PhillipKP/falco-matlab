@@ -57,6 +57,19 @@ end
     
 if(isfield(mp.dm1,'V')==false); mp.dm1.V = zeros(mp.dm1.Nact,mp.dm1.Nact); end %--Initial DM voltages
 
+
+%- Make sure mp.dm1.pinned and mp.dm1.weak are a column vectors 
+if isfield(mp.dm1,'pinned')
+    mp.dm1.pinned = reshape(mp.dm1.pinned, [], 1);
+    mp.dm1.Vpinned = reshape(mp.dm1.Vpinned, [], 1);
+end
+if isfield(mp.dm1, 'weak')
+    mp.dm1.weak = reshape(mp.dm1.weak, [], 1);
+    mp.dm1.VtoHweak = reshape(mp.dm1.VtoHweak, [], 1);
+end
+
+
+
 %% DM2
 % Read the influence function header data from the FITS file
 info = fitsinfo(mp.dm2.inf_fn);
@@ -95,6 +108,17 @@ else
 end
 
 if(isfield(mp.dm2,'V')==false); mp.dm2.V = zeros(mp.dm2.Nact,mp.dm2.Nact); end %--Initial DM voltages
+
+
+%- Make sure mp.dm2.pinned, mp.dm2.Vpinned, mp.dm2.weak, mp.dm2.VtoHweak are a column vectors 
+if isfield(mp.dm2,'pinned')
+    mp.dm2.pinned = reshape(mp.dm2.pinned, [], 1);
+    mp.dm2.Vpinned = reshape(mp.dm2.Vpinned, [], 1);
+end
+if isfield(mp.dm2, 'weak')
+    mp.dm2.weak = reshape(mp.dm2.weak, [], 1);
+    mp.dm2.VtoHweak = reshape(mp.dm2.VtoHweak, [], 1);
+end
 
 %%
 %--Re-include all actuators in the basis set. Need act_ele to be a column vector.
