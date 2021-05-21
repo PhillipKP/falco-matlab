@@ -25,6 +25,16 @@ for Itr = 1:mp.Nitr
     ev.Itr = Itr;
     cvar.Itr = Itr;
     
+    % ADDED BY PHIL
+    %--Enforce constraints on DM commands 
+    if any(mp.dm_ind == 1); mp.dm1 = falco_enforce_dm_constraints(mp.dm1); end
+    if any(mp.dm_ind == 2); mp.dm2 = falco_enforce_dm_constraints(mp.dm2); end
+    
+    %--Update DM actuator gains for new voltages
+    if any(mp.dm_ind == 1); mp.dm1 = falco_update_dm_gain_map(mp.dm1); end
+    if any(mp.dm_ind == 2); mp.dm2 = falco_update_dm_gain_map(mp.dm2); end
+    
+    
     % Updated DM info
     if strcmpi(mp.controller, 'plannedefc')
         mp.dm_ind = mp.dm_ind_sched{Itr}; % Change which DMs are used

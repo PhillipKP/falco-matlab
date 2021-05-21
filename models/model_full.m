@@ -201,12 +201,16 @@ switch lower(mp.layout)
             % actuators in the full model
             mp.dm1 = falco_enforce_dm_constraints(mp.dm1);
             
+          
+            
             %%% NEW CODE For Simulating Weak actuators in the full model
             %mp.dm1 = falco_enforce_weak_actuators(mp.dm1);
   
             %%% MODIFIED CODE: Flat map is baked into mp.dm1.V now
             optval.dm1 = mp.dm1.V.*mp.dm1.VtoH; %+ mp.full.dm1.flatmap; %--DM1 commands in meters
         
+            
+            
             % DO I NEED TO RESTORE mp.dm1.V to it's original value after
             % this??? 
             mp.dm1.V = original_dm1_V;

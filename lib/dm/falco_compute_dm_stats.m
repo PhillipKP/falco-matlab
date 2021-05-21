@@ -68,4 +68,7 @@ if(any(mp.dm_ind==2))
     fprintf('RMS surface of DM2 = %.1f nm\n', 1e9*out.dm2.Srms(Itr))
 end
 
+
+
+
 end %--END OF FUNCTION
