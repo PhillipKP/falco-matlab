@@ -25,14 +25,19 @@ for Itr = 1:mp.Nitr
     ev.Itr = Itr;
     cvar.Itr = Itr;
     
+    
     % ADDED BY PHIL
     %--Enforce constraints on DM commands 
-    if any(mp.dm_ind == 1); mp.dm1 = falco_enforce_dm_constraints(mp.dm1); end
-    if any(mp.dm_ind == 2); mp.dm2 = falco_enforce_dm_constraints(mp.dm2); end
+    if any(mp.dm_ind == 1)
+        [dm1_command, mp.dm1] = phil_falco_enforce_dm_constraints(mp.dm1, mp.full.dm1.flatmap);
+    end
+    if any(mp.dm_ind == 2)
+        [dm2_command, mp.dm2] = phil_falco_enforce_dm_constraints(mp.dm2, mp.full.dm2.flatmap); 
+    end
     
     %--Update DM actuator gains for new voltages
-    if any(mp.dm_ind == 1); mp.dm1 = falco_update_dm_gain_map(mp.dm1); end
-    if any(mp.dm_ind == 2); mp.dm2 = falco_update_dm_gain_map(mp.dm2); end
+    %if any(mp.dm_ind == 1); mp.dm1 = falco_update_dm_gain_map(mp.dm1); end
+    %if any(mp.dm_ind == 2); mp.dm2 = falco_update_dm_gain_map(mp.dm2); end
     
     
     % Updated DM info
@@ -46,6 +51,15 @@ for Itr = 1:mp.Nitr
     fprintf(' ]\n')
     
     out.serialDate(Itr) = now;
+    
+    %%% NEW CODE
+    out.dm1.command(:,:,Itr) = dm1_command;
+    out.dm2.command(:,:,Itr) = dm2_command;
+    
+    out.dm1.Venf(:,:,Itr) = mp.dm1.Venf;
+    out.dm2.Venf(:,:,Itr) = mp.dm2.Venf;
+    %%%
+    
     out = store_dm_command_history(mp, out, Itr);
 
     %% Normalization and throughput calculations
