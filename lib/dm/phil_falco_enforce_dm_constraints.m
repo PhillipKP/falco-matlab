@@ -24,7 +24,7 @@ dm_command = dm.V.*dm.VtoH;   % DM1 commands in meters
 
 % RESTORE mp.dm1.V to it's original value after
 % this???
-dm.Venf = dm.V;
-dm.V = original_dm_V;
+dm.Venf = dm.V; %dm.V is enforced
+dm.V = original_dm_V; % I'm too scared I'll break something later so I restored the original dm.V
 
 end

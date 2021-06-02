@@ -207,11 +207,7 @@ switch lower(mp.layout)
             %%% MODIFIED CODE: Flat map is baked into mp.dm1.V now
             optval.dm1 = mp.dm1.V.*mp.dm1.VtoH;   % DM1 commands in meters
         
-            % RESTORE mp.dm1.V to it's original value after
-            % this??? 
-            mp.dm1.Venf = mp.dm1.V; 
-            mp.dm1.V = original_dm1_V;
-            
+
         
         end
         if(any(mp.dm_ind==2))
@@ -234,8 +230,7 @@ switch lower(mp.layout)
               
             optval.dm2 = mp.dm2.V .* mp.dm2.VtoH; %--DM2 commands in meters
             
-            % NEW CODE RESTORE mp.dm2.V to it's original value after
-            mp.dm2.V = original_dm2_V;
+
         end
         
         if(normFac==0)
