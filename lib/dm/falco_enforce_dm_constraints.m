@@ -39,7 +39,16 @@ dm.pinned = [dm.pinned; indVoltageTooHigh]; % augment the column vector of pinne
 dm.Vpinned = [dm.Vpinned; (dm.Vmax*ones(size(indVoltageTooHigh))-dm.biasMap(indVoltageTooHigh))];
 
 % 2) Enforce bounds at pinned actuators
-dm.V(dm.pinned) = dm.Vpinned; 
+if dm.enforce_absolute_voltage
+    % Enforce on both
+    Vtotal(dm.pinned) = dm.Vpinned;
+    dm.V = Vtotal;
+    
+else
+    % Enforce on just dm.V
+    dm.V(dm.pinned) = dm.Vpinned; 
+    
+end
 
 % 3) Find which actuators violate the DM neighbor rule. (This restricts 
 % the maximum voltage between an actuator and each of its 8 neighbors.) 
@@ -54,5 +63,9 @@ end
 if ~isempty(dm.tied)
     dm.V(dm.tied(:, 2)) = dm.V(dm.tied(:, 1));% + dm.biasMap(dm.tied(:, 1)) - dm.biasMap(dm.tied(:, 2));
 end
+
+
+
+
 
 end %--END OF FUNCTION

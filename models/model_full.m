@@ -185,50 +185,35 @@ switch lower(mp.layout)
             
             optval.use_dm1 = true;
             
-            % NEW CODE: Store for later use
-            original_dm1_V = mp.dm1.V;
-                        
-            % NEW CODE: Convert flat map to voltages
-            dm1_fm_V = mp.full.dm1.flatmap ./ mp.dm1.VtoH;
- 
-            % NEW CODE: Add flat map in voltage units instead of surface
-            % units
-            mp.dm1.V = mp.dm1.V + dm1_fm_V;
             
             % NEW CODE For Simulating Pinned, Railed, and Stuck
             % actuators in the full model
             mp.dm1 = falco_enforce_dm_constraints(mp.dm1);
             
-            
-            
-            % NEW CODE For Simulating Weak actuators in the full model
-            %mp.dm1 = falco_enforce_weak_actuators(mp.dm1);
-  
-            %%% MODIFIED CODE: Flat map is baked into mp.dm1.V now
-            optval.dm1 = mp.dm1.V.*mp.dm1.VtoH;   % DM1 commands in meters
-        
+            if mp.dm1.enforce_absolute_voltage 
+                % Flat map is baked into mp.dm1.V now
+                optval.dm1 = mp.dm1.V.*mp.dm1.VtoH;   
+            else
+                optval.dm1 = (mp.dm1.V + mp.dm1.biasMap) .* mp.dm1.VtoH;
+            end
 
         
         end
         if(any(mp.dm_ind==2))
             optval.use_dm2 = true;
             
-            % NEW CODE: Store for later use% NEW CODE:
-            original_dm2_V = mp.dm2.V;
-            
-            % NEW CODE: Convert flat map to voltages
-            dm2_fm_V = mp.full.dm2.flatmap ./ mp.dm2.VtoH;
-            
-            % NEW CODE: Add flat map in voltage units instead of surface
-            % units
-            mp.dm2.V = mp.dm2.V + dm2_fm_V;
-            
+            % NEW CODE For Simulating Pinned, Railed, and Stuck
+            % actuators in the full model
             mp.dm2 = falco_enforce_dm_constraints(mp.dm2);
-             
-            %%% NEW CODE For Simulating Weak actuators in the full model
-            %mp.dm2 = falco_enforce_weak_actuators(mp.dm2);
-              
-            optval.dm2 = mp.dm2.V .* mp.dm2.VtoH; %--DM2 commands in meters
+            
+            
+            if mp.dm2.enforce_absolute_voltage 
+                % Flat map is baked into mp.dm2.V now
+                optval.dm2 = mp.dm2.V.*mp.dm2.VtoH;   
+            else
+                optval.dm2 = (mp.dm2.V + mp.dm2.biasMap) .* mp.dm2.VtoH;
+            end
+            
             
 
         end
