@@ -53,11 +53,11 @@ for Itr = 1:mp.Nitr
     out.serialDate(Itr) = now;
     
     %%% NEW CODE
-    out.dm1.command(:,:,Itr) = dm1_command;
-    out.dm2.command(:,:,Itr) = dm2_command;
-    
-    out.dm1.Venf(:,:,Itr) = mp.dm1.Venf;
-    out.dm2.Venf(:,:,Itr) = mp.dm2.Venf;
+%     out.dm1.command(:,:,Itr) = dm1_command;
+%     out.dm2.command(:,:,Itr) = dm2_command;
+%     
+%     out.dm1.Venf(:,:,Itr) = mp.dm1.Venf;
+%     out.dm2.Venf(:,:,Itr) = mp.dm2.Venf;
     %%%
     
     out = store_dm_command_history(mp, out, Itr);

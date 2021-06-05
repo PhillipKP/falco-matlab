@@ -189,17 +189,12 @@ switch lower(mp.layout)
             % NEW CODE For Simulating Pinned, Railed, and Stuck
             % actuators in the full model
             
-            
-            %             if mp.dm1.enforce_absolute_voltage
-            %                 % Flat map is baked into mp.dm1.V now
-            %                 optval.dm1 = mp.dm1.V.*mp.dm1.VtoH;
-            %             else
-            
+
             if mp.dm1.enforce_absolute_voltage
                 
-                Vtotal = (mp.dm1.V + mp.dm1.biasMap);
-                Vtotal(mp.dm1.pinned) = mp.dm1.Vpinned;
-                optval.dm1 = Vtotal .* mp.dm1.VtoH;
+                Vtotal1 = (mp.dm1.V + mp.dm1.biasMap);
+                Vtotal1(mp.dm1.pinned) = mp.dm1.Vpinned;
+                optval.dm1 = Vtotal1 .* mp.dm1.VtoH;
                 
             else
                 
@@ -210,25 +205,22 @@ switch lower(mp.layout)
             
             
             
-            %             end
-            
-            
         end
         if(any(mp.dm_ind==2))
             optval.use_dm2 = true;
             
-            % NEW CODE For Simulating Pinned, Railed, and Stuck
-            % actuators in the full model
-            mp.dm2 = falco_enforce_dm_constraints(mp.dm2);
+            if mp.dm2.enforce_absolute_voltage
+                
+                Vtotal2 = (mp.dm2.V + mp.dm2.biasMap);
+                Vtotal2(mp.dm2.pinned) = mp.dm2.Vpinned;
+                optval.dm2 = Vtotal2 .* mp.dm2.VtoH;
+                
+            else
+                
+                mp.dm2 = falco_enforce_dm_constraints(mp.dm2);
+                optval.dm2 = (mp.dm2.V + mp.dm2.biasMap) .* mp.dm2.VtoH;
             
-            
-            %             if mp.dm2.enforce_absolute_voltage
-            %                 % Flat map is baked into mp.dm2.V now
-            %                 optval.dm2 = mp.dm2.V.*mp.dm2.VtoH;
-            %             else
-            optval.dm2 = (mp.dm2.V + mp.dm2.biasMap) .* mp.dm2.VtoH;
-            %             end
-            
+            end
             
             
         end
