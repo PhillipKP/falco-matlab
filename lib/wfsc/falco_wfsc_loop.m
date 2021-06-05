@@ -28,12 +28,12 @@ for Itr = 1:mp.Nitr
     
     % ADDED BY PHIL
     %--Enforce constraints on DM commands 
-    if any(mp.dm_ind == 1)
-        [dm1_command, mp.dm1] = phil_falco_enforce_dm_constraints(mp.dm1, mp.full.dm1.flatmap);
-    end
-    if any(mp.dm_ind == 2)
-        [dm2_command, mp.dm2] = phil_falco_enforce_dm_constraints(mp.dm2, mp.full.dm2.flatmap); 
-    end
+%     if any(mp.dm_ind == 1)
+%         [dm1_command, mp.dm1] = phil_falco_enforce_dm_constraints(mp.dm1, mp.full.dm1.flatmap);
+%     end
+%     if any(mp.dm_ind == 2)
+%         [dm2_command, mp.dm2] = phil_falco_enforce_dm_constraints(mp.dm2, mp.full.dm2.flatmap); 
+%     end
     
     %--Update DM actuator gains for new voltages
     %if any(mp.dm_ind == 1); mp.dm1 = falco_update_dm_gain_map(mp.dm1); end
