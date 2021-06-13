@@ -165,12 +165,19 @@ for Itr = 1:mp.Nitr
     savefig(hProgress.master,fnProgress)
     
     figure(5001)
-    fnProgress = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5001.fig'];
-    savefig(gcf,fnProgress)
+    fn5001fig = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5001.fig'];
+    savefig(gcf,fn5001fig)
+    fn5001png = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5001.png'];
+    savefig(gcf,fn5001png)
+    
     
     figure(5002)
-    fnProgress = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5002.fig'];
-    savefig(gcf,fnProgress)
+    fn5002fig = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5002.fig'];
+    savefig(gcf,fn5002fig)
+    fn5002png = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5002.png'];
+    savefig(gcf,fn5002png)
+    
+
 
     
     fprintf('...done.\n\n')
