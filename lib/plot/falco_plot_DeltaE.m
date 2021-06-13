@@ -35,7 +35,11 @@ function out = falco_plot_DeltaE(mp, out, Eest, EestPrev, Esim, EsimPrev, Itr)
                 set(gca,'FontSize', fs); %,'FontName','Times','FontWeight','Normal')
 
                 hMeasAmp = subplot(2,2,2); % Save the handle of the subplot
-                imagesc(mp.Fend.xisDL, mp.Fend.etasDL, abs(dEmeas2D), [0, dEmax]); axis xy equal tight; colorbar; colormap(hMeasAmp, 'parula');
+                if dEmax > 0
+                    imagesc(mp.Fend.xisDL, mp.Fend.etasDL, abs(dEmeas2D), [0, dEmax]); axis xy equal tight; colorbar; colormap(hMeasAmp, 'parula');
+                else
+                    imagesc(mp.Fend.xisDL, mp.Fend.etasDL, abs(dEmeas2D)); axis xy equal tight; colorbar; colormap(hMeasAmp, 'parula');  
+                end
                 title('abs(dE_{meas})', 'Fontsize', fs); 
                 set(gca,'FontSize', fs); %,'FontName','Times','FontWeight','Normal')
 

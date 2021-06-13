@@ -159,28 +159,27 @@ for Itr = 1:mp.Nitr
     fnSnippet = [mp.path.config filesep mp.runLabel,'Itr_' num2str(Itr) '_snippet.mat'];
     fprintf('Saving data snippet to \n%s\n', fnSnippet)
     save(fnSnippet, 'out');
+    fprintf('...done.\n\n')
     
     
-    fnProgress = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_progress.fig'];
-    savefig(hProgress.master,fnProgress)
+    
+    %- Phil added extra code to save the progress plots and full model and 
+    %  compact model normalization checkes
+    fnProgress = [mp.path.png  mp.runLabel,'_Itr_' num2str(Itr) '_progress.png'];
+    figure(hProgress.master.Number)
+    set(gcf,'position',[569 223 998 800])
+    saveas(gcf,fnProgress)
     
     figure(5001)
-    fn5001fig = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5001.fig'];
-    savefig(gcf,fn5001fig)
-    fn5001png = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5001.png'];
-    savefig(gcf,fn5001png)
-    
+    fn5001png = [mp.path.png mp.runLabel 'Itr_' num2str(Itr) '_Fig5001.png'];
+    saveas(gcf,fn5001png)
     
     figure(5002)
-    fn5002fig = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5002.fig'];
-    savefig(gcf,fn5002fig)
-    fn5002png = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5002.png'];
-    savefig(gcf,fn5002png)
+    fn5002png = [mp.path.png mp.runLabel 'Itr_' num2str(Itr) '_Fig5002.png'];
+    saveas(gcf,fn5002png)
     
 
-
     
-    fprintf('...done.\n\n')
 
     
     %% SAVE THE TRAINING DATA OR RUN THE E-M Algorithm
