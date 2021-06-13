@@ -92,17 +92,30 @@ if(mp.flagPlot)
 
     E0c = model_compact(mp, modvar);
     I0c = abs(E0c).^2;
+    
     figure(501); imagesc(log10(I0c)); axis xy equal tight; colorbar;
     title('Compact Model: Normalization Check');
     set(gca,'Fontsize', 18)
     drawnow;
-
+        
+    % Phil's Code    
+    figure(5001); imagesc(log10(I0c).* mp.Fend.corr.mask); axis xy equal tight; colorbar;
+    title('Compact Model: Normalization Check');
+    set(gca,'Fontsize', 18)
+    
+    
     E0f = model_full(mp, modvar);
     I0f = abs(E0f).^2;
     figure(502); imagesc(log10(I0f)); axis xy equal tight; colorbar;
     title('Full Model: Normalization Check');
     set(gca,'Fontsize', 18)
     drawnow;
+    
+    figure(5002); imagesc(log10(I0f).* mp.Fend.corr.mask); axis xy equal tight; colorbar;
+    title('Full Model: Normalization Check');
+    set(gca,'Fontsize', 18)
+    drawnow;
+    
 end
 
 end %--END OF FUNCTION

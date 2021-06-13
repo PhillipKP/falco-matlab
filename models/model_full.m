@@ -191,10 +191,12 @@ switch lower(mp.layout)
             
 
             if mp.dm1.enforce_absolute_voltage
+                %biasMap = flatmap / gain
                 
                 Vtotal1 = (mp.dm1.V + mp.dm1.biasMap);
                 Vtotal1(mp.dm1.pinned) = mp.dm1.Vpinned;
                 optval.dm1 = Vtotal1 .* mp.dm1.VtoH;
+                
                 
             else
                 

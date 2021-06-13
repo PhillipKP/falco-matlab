@@ -156,11 +156,26 @@ for Itr = 1:mp.Nitr
     end
 
     %% Save 'out' structure after each iteration in case the trial terminates early.
-    fnSnippet = [mp.path.config filesep mp.runLabel,'_snippet.mat'];
+    fnSnippet = [mp.path.config filesep mp.runLabel,'Itr_' num2str(Itr) '_snippet.mat'];
     fprintf('Saving data snippet to \n%s\n', fnSnippet)
     save(fnSnippet, 'out');
+    
+    
+    fnProgress = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_progress.fig'];
+    savefig(hProgress.master,fnProgress)
+    
+    figure(5001)
+    fnProgress = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5001.fig'];
+    savefig(gcf,fnProgress)
+    
+    figure(5002)
+    fnProgress = [mp.path.config mp.runLabel,'_Itr_' num2str(Itr) '_Fig5002.fig'];
+    savefig(gcf,fnProgress)
+
+    
     fprintf('...done.\n\n')
 
+    
     %% SAVE THE TRAINING DATA OR RUN THE E-M Algorithm
     if mp.flagTrainModel; mp = falco_train_model(mp,ev); end
 
