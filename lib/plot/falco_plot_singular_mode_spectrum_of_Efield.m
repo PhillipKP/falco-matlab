@@ -43,7 +43,7 @@ function out = falco_plot_singular_mode_spectrum_of_Efield(mp, out, jacStruct, E
             'Color', [0.3, 1-(0.2+Itr/mp.Nitr)/(1.3), 1]);
         grid on; set(gca,'minorgridlines','none')
         set(gcf,'Color',[1 1 1]);
-        title('Singular Mode Spectrum')%,'Fontsize',20)
+        title(['Singular Mode Spectrum. Itr', num2str(Itr), ''])%,'Fontsize',20)
         xlim([1e-10, 2*max(s.^2/alpha2)])
         ylim([1e-12, 1e-0]) 
         drawnow;
