@@ -177,6 +177,10 @@ if(mp.full.flagPROPER)
         mp.full.zval_m = [zval_m0(:), mp.full.ZrmsVal]; % [meters]
     end
     
+    % This is the magnitude and phase going into the input pupil of the
+    % Habex model 
+    mp.full.zval = mp.full.zval_m;
+    
 else %--Include the Zernike map at the input pupil for the FALCO full model
     ZernMap = falco_gen_norm_zernike_maps(mp.P1.full.Nbeam,mp.centering,indsZnoll(izern)); %--2-D map of the normalized (RMS = 1) Zernike mode
     ZernMap = padOrCropEven(ZernMap,mp.P1.full.Narr); %--Adjust zero padding if necessary
