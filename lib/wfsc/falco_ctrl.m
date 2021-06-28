@@ -51,8 +51,6 @@ function [mp, cvar] = falco_ctrl(mp, cvar, jacStruct)
             cvar.Eest(:, iMode) = cvar.Eest(:, iMode) / Epeak;
         end
         
-        % mp.WspatialVec is a 19000, 1 array of ones
-        % cvar.Eest is a 19000, 1 array of the E-field from model_full
         Eweighted = mp.WspatialVec(:, iStar) .* cvar.Eest(:, iMode); %--Apply 2-D spatial weighting to E-field in dark hole pixels.
         cvar.RealGstarEab_wsum = cvar.RealGstarEab_wsum + mp.jac.weights(iMode)*real(Gstack'*Eweighted); %--Apply the Jacobian weights and add to the total.
 

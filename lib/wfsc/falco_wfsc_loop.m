@@ -67,6 +67,8 @@ for Itr = 1:mp.Nitr
     %% Wavefront Estimation
     
     if (Itr > 1); EestPrev = ev.Eest; end % save previous estimate for Delta E plot
+    
+    
     ev = falco_est(mp, ev, jacStruct);
     
     out = store_intensities(mp, out, ev, Itr);
@@ -158,7 +160,8 @@ if isfield(cvar, 'Im')
 end
 %% Save out an abridged workspace
 
-fnSnippet = [mp.path.config filesep mp.runLabel,'_snippet.mat'];
+fnSnippet = [mp.path.config filesep mp.runLabel,'Itr_' num2str(Itr) '_snippet.mat'];
+
 fprintf('\nSaving data snippet to:\n\t%s\n', fnSnippet)
 save(fnSnippet, 'out');
 fprintf('...done.\n')
