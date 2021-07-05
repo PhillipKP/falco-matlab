@@ -28,15 +28,15 @@ function subbandImage = falco_get_sim_sbp_image(mp, iSubband)
 
     % THIS PART WILL NEED TO BE DELETED!
     %--Compute the DM surfaces outside the full model to save time
-%     if any(mp.dm_ind == 1)
-%         mp.dm1.surfM = falco_gen_dm_surf(mp.dm1, mp.dm1.dx, mp.dm1.NdmPad); 
-%     end
-%     if any(mp.dm_ind == 2)
-%         mp.dm2.surfM = falco_gen_dm_surf(mp.dm2, mp.dm2.dx, mp.dm2.NdmPad);
-%     end
-%     if any(mp.dm_ind == 9)
-%         mp.dm9.phaseM = falco_dm_surf_from_cube(mp.dm9, mp.dm9);
-%     end
+     if any(mp.dm_ind == 1)
+         mp.dm1.surfM = falco_gen_dm_surf(mp.dm1, mp.dm1.dx, mp.dm1.NdmPad); 
+     end
+     if any(mp.dm_ind == 2)
+         mp.dm2.surfM = falco_gen_dm_surf(mp.dm2, mp.dm2.dx, mp.dm2.NdmPad);
+     end
+     if any(mp.dm_ind == 9)
+         mp.dm9.phaseM = falco_dm_surf_from_cube(mp.dm9, mp.dm9);
+     end
 
     %--Loop over all wavelengths and polarizations
     Npol = length(mp.full.pol_conds);

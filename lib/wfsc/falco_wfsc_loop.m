@@ -68,6 +68,9 @@ for Itr = 1:mp.Nitr
     
     if (Itr > 1); EestPrev = ev.Eest; end % save previous estimate for Delta E plot
     
+    itr_name = ['Series', num2str(mp.SeriesNum,'%04.f'), 'Trial', num2str(mp.TrialNum,'%04.f'), '_Itr_', num2str(Itr)]
+    itr_file = [mp.path.itr itr_name]
+    save(itr_file,'mp','out')
     
     ev = falco_est(mp, ev, jacStruct);
     

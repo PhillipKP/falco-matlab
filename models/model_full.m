@@ -100,18 +100,7 @@ if modvar.zernIndex ~= 1
     zernMat = padOrCropEven(zernMat, mp.P1.full.Narr);
     Ein = Ein.*zernMat*(2*pi/lambda)*mp.jac.Zcoef(modvar.zernIndex);
 end
-%%% FOR DEBUGGING
 
-modvar
-
-normFac
-
-
-disp(['mp.layout = ' mp.layout ''])
-
-dbstack
-
-%%%
 
 
 
@@ -179,25 +168,14 @@ switch lower(mp.layout)
             optval.use_dm1 = true;
 
             
-            % Add noise here
-            % Need to fix the noise so it only works on real actuators
-            if isfield(modvar,'dmNoiseIndex')
-                mp.dm1.V = mp.dm1.V + mp.dm1.noise_mat(:,:,modvar.dmNoiseIndex)
-                
-                %DEBUGGING FOR PHIL
-                %save(['VforNoiseIndex' num2str(modvar.dmNoiseIndex) 'lambda' num2str(lambda) '.mat'])
-                
-            end
-            
+            % The old way:
             optval.dm1 = mp.dm1.V.*mp.dm1.VtoH + mp.full.dm1.flatmap; %--DM1 commands in meters
-
-
+            
 
         end
         if any(mp.dm_ind == 2)
             optval.use_dm2 = true;
 
-            % mp.dm2.V = dm_adderrors(mp.dm2);
 
             optval.dm2 = mp.dm2.V.*mp.dm2.VtoH + mp.full.dm2.flatmap; %--DM2 commands in meters
         end
